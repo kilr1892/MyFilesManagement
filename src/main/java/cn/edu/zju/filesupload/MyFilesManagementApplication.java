@@ -6,10 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan("cn.edu.zju.filesupload.mapper")
-public class MyfilesmanagementApplication {
+public class MyFilesManagementApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MyfilesmanagementApplication.class, args);
+        SpringApplication.run(MyFilesManagementApplication.class, args);
     }
 
 }
