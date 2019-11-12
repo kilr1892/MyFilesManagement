@@ -1,0 +1,32 @@
+spring:
+  freemarker:
+    cache: false
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      url: jdbc:sqlserver://10.15.43.250;database=a_file_upload
+      username: lihang
+      password: lihang@zju308
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+
+  #  resources:
+  #    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+server:
+  port: 8080
+
+mybatis:
+  mapper-locations: classpath*:cn/edu/zju/filesupload/mapper/*.xml
+  type-aliases-package: cn.edu.zju.filesupload.pojo
+
