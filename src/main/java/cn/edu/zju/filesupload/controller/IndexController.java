@@ -17,11 +17,8 @@ public class IndexController {
     @Autowired
     private DownloadService downloadService;
 
-    @GetMapping("/aaa")
+    @GetMapping("/test")
     public String downloadPage(Model model) {
-//        PageInfo<FileUpload> listFileDataPageInfo = downloadService.listFileData(1,3);
-//        model.addAttribute("listFileData", listFileDataPageInfo.getList());
-//        model.addAttribute("pageInfo", listFileDataPageInfo);
-        return "index";
+        return "test";
     }
 }
