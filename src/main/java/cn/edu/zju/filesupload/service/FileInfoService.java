@@ -1,11 +1,14 @@
 package cn.edu.zju.filesupload.service;
 
+import cn.edu.zju.filesupload.exception.BusinessException;
 import cn.edu.zju.filesupload.pojo.FileInfo;
 import cn.edu.zju.filesupload.pojo.Search;
 import cn.edu.zju.filesupload.utils.ResponseInfo;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 /**
@@ -21,4 +24,6 @@ public interface FileInfoService {
     PageInfo<FileInfo> listFileData(Integer pageNum, Integer pageSize, Search search);
 
     String getDateString(Date searchDate);
+
+    void downloadFile(String fileName, HttpServletResponse res) throws BusinessException, UnsupportedEncodingException;
 }

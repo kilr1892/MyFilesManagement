@@ -1,5 +1,6 @@
 package cn.edu.zju.filesupload.controller;
 
+import cn.edu.zju.filesupload.exception.BusinessException;
 import cn.edu.zju.filesupload.pojo.FileInfo;
 import cn.edu.zju.filesupload.pojo.Search;
 import cn.edu.zju.filesupload.service.FileInfoService;
@@ -11,11 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 
 
 /**
@@ -33,13 +34,14 @@ public class FileInfoController {
 
     @GetMapping("/upload")
     public String uploadPage(Model model) {
-    // TODO 改成界面上的一个按钮, 这里会去了
+        // TODO 改成界面上的一个按钮, 这里会去了
         return "upload";
     }
 
     /**
      * 上传
-     * @param files 前端上传的文件
+     *
+     * @param files    前端上传的文件
      * @param fileInfo FileInfo
      * @return ResponseInfo json对象
      */
@@ -55,7 +57,7 @@ public class FileInfoController {
         return fileInfoService.upload(files, fileInfo);
     }
 
-    @GetMapping(value = {"/","/download"})
+    @GetMapping(value = {"/", "/download"})
     public String downloadPage(Model model, @RequestParam(defaultValue = "1") String pageNum, Search search) {
         PageInfo<FileInfo> listFileDataPageInfo = fileInfoService.listFileData(Integer.parseInt(pageNum), 5, search);
         if (search.getSearchDate() != null) {
@@ -68,4 +70,14 @@ public class FileInfoController {
         return "download";
     }
 
+    @GetMapping("/download/{fileName}")
+    public void downloadFile(@PathVariable("fileName") String fileName, HttpServletResponse res) {
+        try {
+            fileInfoService.downloadFile(fileName, res);
+        } catch (BusinessException e) {
+            e.getResponse();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package cn.edu.zju.filesupload.service.impl;
 
+import cn.edu.zju.filesupload.exception.BusinessException;
 import cn.edu.zju.filesupload.mapper.FileInfoMapper;
 import cn.edu.zju.filesupload.pojo.FileInfo;
 import cn.edu.zju.filesupload.pojo.FileInfoExample;
@@ -9,24 +10,21 @@ import cn.edu.zju.filesupload.utils.FileUtils;
 import cn.edu.zju.filesupload.utils.ResponseInfo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * 服务实现类.
@@ -62,7 +60,7 @@ public class FileInfoServiceImpl implements FileInfoService {
                 // 文件名 eUljOejPseMeDg86h.png
                 String fileName = FileUtils.getFileName(fileInfo);
                 //写入文件  E:\springboot-upload\image\20180608\113339\eUljOejPseMeDg86h.png
-                File dest = new File(basePath + folder + "/" + fileName);
+                File dest = new File(basePath + folder + fileName);
 
                 // 上传文件
                 file.transferTo(dest);
@@ -80,7 +78,7 @@ public class FileInfoServiceImpl implements FileInfoService {
                 fileInfo.setFileName(fileName);
 
                 // 文件存放地址 \20180608\113339\a.jpg
-                fileInfo.setFilePath(folder + fileName);
+                fileInfo.setFilePath(basePath + folder);
                 // 后缀
                 fileInfo.setFileType(FileUtils.getFileNameSub(fileInfo.getFileOriginalName()));
                 // 是否删除
@@ -153,5 +151,66 @@ public class FileInfoServiceImpl implements FileInfoService {
         String format = df.format(searchDate);
         System.out.println(format);
         return format;
+    }
+
+    @Override
+    public void downloadFile(String fileName, HttpServletResponse res) throws BusinessException, UnsupportedEncodingException {
+        if (fileName == null) {
+            throw new BusinessException("1001", "文件名不能为空");
+        }
+
+        FileInfoExample fileInfoExample = new FileInfoExample();
+        FileInfoExample.Criteria criteria = fileInfoExample.createCriteria();
+        criteria.andFileNameEqualTo(fileName);
+        FileInfo fileInfo = fileInfoMapper.selectByExample(fileInfoExample).get(0);
+        log.info("fileInfo-->{}", fileInfo);
+        if (fileInfo == null) {
+            throw new BusinessException("2001", "文件名不存在");
+        }
+        // 设置强制下载不打开
+        res.setContentType("application/force-download");
+        // 设置文件名
+        res.addHeader("Content-Disposition", "attachment;fileName=" +
+                new String(fileInfo.getFileOriginalName().getBytes("gbk"), "iso8859-1"));
+        res.setHeader("Context-type", "application/octet-stream");
+
+        // 找到文件
+        File file = new File(Paths.get(fileInfo.getFilePath(), fileName).toString());
+        if (file.exists()) {
+            byte[] buffer = new byte[1024];
+            FileInputStream fis = null;
+            BufferedInputStream bis = null;
+            OutputStream os = null;
+
+            try {
+                fis = new FileInputStream(file);
+                bis = new BufferedInputStream(fis);
+                os = res.getOutputStream();
+                int i = bis.read(buffer);
+                while (i != -1) {
+                    os.write(buffer, 0, i);
+                    i = bis.read(buffer);
+                }
+                log.info(fileInfo.getFileOriginalName() + "下载成功");
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new BusinessException("9999", e.getMessage());
+            } finally {
+                if (bis != null) {
+                    try {
+                        bis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 }
