@@ -1,8 +1,12 @@
 package cn.edu.zju.filesupload.service;
 
 import cn.edu.zju.filesupload.pojo.FileInfo;
+import cn.edu.zju.filesupload.pojo.Search;
 import cn.edu.zju.filesupload.utils.ResponseInfo;
+import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Date;
 
 /**
  * 文件上传下载服务.
@@ -13,4 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 public interface FileInfoService {
 
     ResponseInfo<?> upload(MultipartFile[] files, FileInfo fileInfo);
+
+    PageInfo<FileInfo> listFileData(Integer pageNum, Integer pageSize, Search search);
+
+    String getDateString(Date searchDate);
 }

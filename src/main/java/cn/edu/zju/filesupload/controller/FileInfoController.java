@@ -1,9 +1,12 @@
 package cn.edu.zju.filesupload.controller;
 
 import cn.edu.zju.filesupload.pojo.FileInfo;
+import cn.edu.zju.filesupload.pojo.Search;
 import cn.edu.zju.filesupload.service.FileInfoService;
 import cn.edu.zju.filesupload.utils.ResponseInfo;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,9 +33,16 @@ public class FileInfoController {
 
     @GetMapping("/upload")
     public String uploadPage(Model model) {
+    // TODO 改成界面上的一个按钮, 这里会去了
         return "upload";
     }
 
+    /**
+     * 上传
+     * @param files 前端上传的文件
+     * @param fileInfo FileInfo
+     * @return ResponseInfo json对象
+     */
     @PostMapping("/upload")
     @ResponseBody
     public ResponseInfo<?> upload(@RequestParam("file") MultipartFile[] files, FileInfo fileInfo) {
@@ -44,4 +54,18 @@ public class FileInfoController {
         }
         return fileInfoService.upload(files, fileInfo);
     }
+
+    @GetMapping(value = {"/","/download"})
+    public String downloadPage(Model model, @RequestParam(defaultValue = "1") String pageNum, Search search) {
+        PageInfo<FileInfo> listFileDataPageInfo = fileInfoService.listFileData(Integer.parseInt(pageNum), 5, search);
+        if (search.getSearchDate() != null) {
+            String date = fileInfoService.getDateString(search.getSearchDate());
+            model.addAttribute("dateString", date);
+        }
+        model.addAttribute("listFileData", listFileDataPageInfo.getList());
+        model.addAttribute("pageInfo", listFileDataPageInfo);
+        model.addAttribute("searchPojo", search);
+        return "download";
+    }
+
 }

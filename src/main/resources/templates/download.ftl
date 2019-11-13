@@ -89,12 +89,12 @@
                                         </thead>
                                         <#list listFileData as data>
                                             <tr>
-                                                <td>${data.fileName}</td>
-                                                <td>${data.fileCreateDate?datetime}</td>
-                                                <td>${data.fileSize}</td>
-                                                <td>${data.fileOwner}</td>
-                                                <td>${data.fileGrade}</td>
-                                                <td><a href="files/${data.fileName+data.fileType}">下载</a></td>
+                                                <td>${data.fileOriginalName}</td>
+                                                <td>${data.fileCreatedDate?datetime}</td>
+                                                <td>${data.fileSize} kb</td>
+                                                <td>${data.fileCreatedByName}</td>
+                                                <td>${data.fileResourceId}</td>
+                                                <td><a href="download/${data.fileName}">下载</a></td>
                                             </tr>
                                         </#list>
                                     </table>

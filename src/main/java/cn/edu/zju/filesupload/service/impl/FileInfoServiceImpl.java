@@ -2,11 +2,16 @@ package cn.edu.zju.filesupload.service.impl;
 
 import cn.edu.zju.filesupload.mapper.FileInfoMapper;
 import cn.edu.zju.filesupload.pojo.FileInfo;
+import cn.edu.zju.filesupload.pojo.FileInfoExample;
+import cn.edu.zju.filesupload.pojo.Search;
 import cn.edu.zju.filesupload.service.FileInfoService;
 import cn.edu.zju.filesupload.utils.FileUtils;
 import cn.edu.zju.filesupload.utils.ResponseInfo;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +23,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -55,8 +62,9 @@ public class FileInfoServiceImpl implements FileInfoService {
                 // 文件名 eUljOejPseMeDg86h.png
                 String fileName = FileUtils.getFileName(fileInfo);
                 //写入文件  E:\springboot-upload\image\20180608\113339\eUljOejPseMeDg86h.png
-                File dest = new File(basePath + folder+"/" + fileName);
+                File dest = new File(basePath + folder + "/" + fileName);
 
+                // 上传文件
                 file.transferTo(dest);
                 log.info(file.getOriginalFilename() + "上传成功");
 
@@ -79,18 +87,19 @@ public class FileInfoServiceImpl implements FileInfoService {
                 fileInfo.setFileIsDelete(false);
                 // md5信息
                 fileInfo.setFileMd5(FileUtils.md5File(dest.toString()));
-                // 资源id = = 不知道啥用...
-                fileInfo.setFileResourceId("");
+                // 资源id 现在是资源评分哦
+                // TODO 以后记得改字段...这里就觉得jpa真好
+                fileInfo.setFileResourceId("0");
                 // 大小
-                fileInfo.setFileSize(file.getSize());
+                fileInfo.setFileSize(file.getSize()/1024);
                 // 可用
                 fileInfo.setFileIsValid(true);
                 // 保留字
-                fileInfo.setFileReservedVarchar1("");
+                // FileReservedVarchar1 用作搜索用的时间吧
+                String s = LocalDate.now().toString();
+                fileInfo.setFileReservedVarchar1(s);
                 fileInfo.setFileReservedVarchar2("");
                 fileInfo.setFileReservedVarchar3("");
-
-                // 上传文件
 
                 // 插入数据库
                 fileInfoMapper.insertSelective(fileInfo);
@@ -109,5 +118,40 @@ public class FileInfoServiceImpl implements FileInfoService {
         }
 
         return ResponseInfo.success("上传成功");
+    }
+
+    @Override
+    public PageInfo<FileInfo> listFileData(Integer pageNum, Integer pageSize, Search searchPOJO) {
+        PageHelper.startPage(pageNum, pageSize);
+        FileInfoExample fileInfoExample = new FileInfoExample();
+        FileInfoExample.Criteria criteria = fileInfoExample.createCriteria();
+
+        if (searchPOJO.getSearchDate() != null) {
+            Date searchDate = searchPOJO.getSearchDate();
+//
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String format = df.format(searchDate);
+
+            criteria.andFileReservedVarchar3EqualTo(format);
+        }
+
+        if ("".equals(searchPOJO.getSearchFileName()) || searchPOJO.getSearchFileName() == null) {
+            ;
+        } else {
+            criteria.andFileNameLike("%" + searchPOJO.getSearchFileName() + "%");
+        }
+
+        fileInfoExample.setOrderByClause("file_id desc");
+        List<FileInfo> fileInfos = fileInfoMapper.selectByExample(fileInfoExample);
+        PageInfo<FileInfo> fileUploadPageInfo = new PageInfo<>(fileInfos, pageSize);
+        return fileUploadPageInfo;
+    }
+
+    @Override
+    public String getDateString(Date searchDate) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        String format = df.format(searchDate);
+        System.out.println(format);
+        return format;
     }
 }
