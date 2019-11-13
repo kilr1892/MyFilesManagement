@@ -11,12 +11,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @version v1.0
  */
 @Configuration
-public class MyConfigurer implements WebMvcConfigurer {
+public class MyWebMvcConfigurer implements WebMvcConfigurer {
 
+    /**
+     * 配置静态目录
+     * spring2.x 后无法直接访问到 /static 目录下的文件
+     * @param registry registry
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath*:/static/");
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
         registry.addResourceHandler("/files/**").addResourceLocations("file:/E:/Program_Data/upload/");
-//        WebMvcConfigurer.super.addResourceHandlers(registry);
     }
 }

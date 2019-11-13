@@ -3,35 +3,35 @@ package cn.edu.zju.filesupload.pojo;
 import java.util.Date;
 
 public class FileInfo {
-    private Long id;
+    private Integer fileId;
 
-    private String createdBy;
+    private String fileCreatedByName;
 
-    private Date createdDate;
+    private Date fileCreatedDate;
 
-    private String updatedBy;
+    private String fileUpdatedByName;
 
-    private Date updatedDate;
+    private Date fileUpdatedDate;
 
-    private String deleteTime;
+    private String fileDeleteTime;
 
     private String fileName;
 
-    private String fileOrginName;
+    private String fileOriginalName;
 
     private String filePath;
 
     private String fileType;
 
-    private Boolean isDelete;
+    private Boolean fileIsDelete;
 
-    private String md5;
+    private String fileMd5;
 
-    private String resourceId;
+    private String fileResourceId;
 
-    private Long size;
+    private Long fileSize;
 
-    private Boolean valid;
+    private Boolean fileIsValid;
 
     private String fileReservedVarchar1;
 
@@ -39,52 +39,52 @@ public class FileInfo {
 
     private String fileReservedVarchar3;
 
-    public Long getId() {
-        return id;
+    public Integer getFileId() {
+        return fileId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setFileId(Integer fileId) {
+        this.fileId = fileId;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public String getFileCreatedByName() {
+        return fileCreatedByName;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy == null ? null : createdBy.trim();
+    public void setFileCreatedByName(String fileCreatedByName) {
+        this.fileCreatedByName = fileCreatedByName == null ? null : fileCreatedByName.trim();
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getFileCreatedDate() {
+        return fileCreatedDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setFileCreatedDate(Date fileCreatedDate) {
+        this.fileCreatedDate = fileCreatedDate;
     }
 
-    public String getUpdatedBy() {
-        return updatedBy;
+    public String getFileUpdatedByName() {
+        return fileUpdatedByName;
     }
 
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy == null ? null : updatedBy.trim();
+    public void setFileUpdatedByName(String fileUpdatedByName) {
+        this.fileUpdatedByName = fileUpdatedByName == null ? null : fileUpdatedByName.trim();
     }
 
-    public Date getUpdatedDate() {
-        return updatedDate;
+    public Date getFileUpdatedDate() {
+        return fileUpdatedDate;
     }
 
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = updatedDate;
+    public void setFileUpdatedDate(Date fileUpdatedDate) {
+        this.fileUpdatedDate = fileUpdatedDate;
     }
 
-    public String getDeleteTime() {
-        return deleteTime;
+    public String getFileDeleteTime() {
+        return fileDeleteTime;
     }
 
-    public void setDeleteTime(String deleteTime) {
-        this.deleteTime = deleteTime == null ? null : deleteTime.trim();
+    public void setFileDeleteTime(String fileDeleteTime) {
+        this.fileDeleteTime = fileDeleteTime == null ? null : fileDeleteTime.trim();
     }
 
     public String getFileName() {
@@ -95,12 +95,12 @@ public class FileInfo {
         this.fileName = fileName == null ? null : fileName.trim();
     }
 
-    public String getFileOrginName() {
-        return fileOrginName;
+    public String getFileOriginalName() {
+        return fileOriginalName;
     }
 
-    public void setFileOrginName(String fileOrginName) {
-        this.fileOrginName = fileOrginName == null ? null : fileOrginName.trim();
+    public void setFileOriginalName(String fileOriginalName) {
+        this.fileOriginalName = fileOriginalName == null ? null : fileOriginalName.trim();
     }
 
     public String getFilePath() {
@@ -119,44 +119,44 @@ public class FileInfo {
         this.fileType = fileType == null ? null : fileType.trim();
     }
 
-    public Boolean getIsDelete() {
-        return isDelete;
+    public Boolean getFileIsDelete() {
+        return fileIsDelete;
     }
 
-    public void setIsDelete(Boolean isDelete) {
-        this.isDelete = isDelete;
+    public void setFileIsDelete(Boolean fileIsDelete) {
+        this.fileIsDelete = fileIsDelete;
     }
 
-    public String getMd5() {
-        return md5;
+    public String getFileMd5() {
+        return fileMd5;
     }
 
-    public void setMd5(String md5) {
-        this.md5 = md5 == null ? null : md5.trim();
+    public void setFileMd5(String fileMd5) {
+        this.fileMd5 = fileMd5 == null ? null : fileMd5.trim();
     }
 
-    public String getResourceId() {
-        return resourceId;
+    public String getFileResourceId() {
+        return fileResourceId;
     }
 
-    public void setResourceId(String resourceId) {
-        this.resourceId = resourceId == null ? null : resourceId.trim();
+    public void setFileResourceId(String fileResourceId) {
+        this.fileResourceId = fileResourceId == null ? null : fileResourceId.trim();
     }
 
-    public Long getSize() {
-        return size;
+    public Long getFileSize() {
+        return fileSize;
     }
 
-    public void setSize(Long size) {
-        this.size = size;
+    public void setFileSize(Long fileSize) {
+        this.fileSize = fileSize;
     }
 
-    public Boolean getValid() {
-        return valid;
+    public Boolean getFileIsValid() {
+        return fileIsValid;
     }
 
-    public void setValid(Boolean valid) {
-        this.valid = valid;
+    public void setFileIsValid(Boolean fileIsValid) {
+        this.fileIsValid = fileIsValid;
     }
 
     public String getFileReservedVarchar1() {

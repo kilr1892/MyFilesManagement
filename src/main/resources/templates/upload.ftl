@@ -6,7 +6,7 @@
 </head>
 <body>
 <form action="/upload" method="post" enctype="multipart/form-data">
-    上传人姓名<input type="text" name="fileOwner" >
+    上传人姓名<input type="text" name="fileCreatedByName" >
     <input type="file" name="file" multiple/>
     <input type="submit" value="上传" />
 </form>
