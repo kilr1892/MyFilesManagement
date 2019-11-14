@@ -96,8 +96,8 @@ public class FileInfoServiceImpl implements FileInfoService {
                 // FileReservedVarchar1 用作搜索用的时间吧
                 String s = LocalDate.now().toString();
                 fileInfo.setFileReservedVarchar1(s);
-                fileInfo.setFileReservedVarchar2("");
-                fileInfo.setFileReservedVarchar3("");
+                fileInfo.setFileReservedVarchar2("0");
+                fileInfo.setFileReservedVarchar3("0");
 
                 // 插入数据库
                 fileInfoMapper.insertSelective(fileInfo);
@@ -126,11 +126,11 @@ public class FileInfoServiceImpl implements FileInfoService {
 
         if (searchPOJO.getSearchDate() != null) {
             Date searchDate = searchPOJO.getSearchDate();
-//
+
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             String format = df.format(searchDate);
 
-            criteria.andFileReservedVarchar3EqualTo(format);
+            criteria.andFileReservedVarchar1EqualTo(format);
         }
 
         if ("".equals(searchPOJO.getSearchFileName()) || searchPOJO.getSearchFileName() == null) {
@@ -147,6 +147,9 @@ public class FileInfoServiceImpl implements FileInfoService {
 
     @Override
     public String getDateString(Date searchDate) {
+        if (searchDate == null) {
+            return "";
+        }
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         String format = df.format(searchDate);
         System.out.println(format);
@@ -212,5 +215,42 @@ public class FileInfoServiceImpl implements FileInfoService {
                 }
             }
         }
+    }
+
+    @Override
+    @Transactional
+    public ResponseInfo<?> toGrade(String fileId, String toGrade) throws BusinessException {
+        // 找出这个
+        FileInfoExample fileInfoExample = new FileInfoExample();
+        FileInfoExample.Criteria criteria = fileInfoExample.createCriteria();
+        criteria.andFileIdEqualTo(Integer.parseInt(fileId));
+        FileInfo fileInfo = fileInfoMapper.selectByExample(fileInfoExample).get(0);
+        if (fileInfo == null) {
+            throw new BusinessException("2001", "数据库信息缺失");
+        }
+        // 评分人数
+        int oldGradePeople = Integer.parseInt(fileInfo.getFileReservedVarchar2());
+        oldGradePeople++;
+        // 原有总分
+        int oldGradeNumber = Integer.parseInt(fileInfo.getFileReservedVarchar3());
+        // 现在总分
+        oldGradeNumber += Integer.parseInt(toGrade);
+        // 现在页面显示的分数
+        int res = oldGradeNumber / oldGradePeople;
+
+        // 评分人数
+        FileInfo fileInfoForUpdate = new FileInfo();
+        fileInfoForUpdate.setFileReservedVarchar2(oldGradePeople + "");
+        // 总分
+        fileInfoForUpdate.setFileReservedVarchar3(oldGradeNumber + "");
+        // 平均分
+        fileInfoForUpdate.setFileResourceId(res + "");
+
+        // 更新数据库
+        fileInfoMapper.updateByExampleSelective(fileInfoForUpdate, fileInfoExample);
+
+        log.info("id为{}的信息更新成功", fileId);
+
+        return ResponseInfo.success("文件" + fileInfo.getFileOriginalName() + "更新成功");
     }
 }

@@ -58,8 +58,6 @@
                                                 <#else >
                                                     <input type="text" class="form-control my-form-control" value="" name="searchFileName">
                                                 </#if>
-
-
                                             </label>
                                         </div>
 
@@ -142,6 +140,19 @@
                                                                     <div class="modal-body">
                                                                         <div class="form-group">
                                                                             <label class="col-xs-12 text-center">请对用户 ${data.fileCreatedByName} 上传的文件 ${data.fileOriginalName} 评分</label>
+
+                                                                            <input name="fileId" type="hidden" value="${data.fileId}" />
+                                                                            <#if searchPojo.searchDate??>
+                                                                                <input type="hidden" name="searchDate" value="${dateString}">
+                                                                            <#else >
+                                                                                <input type="hidden" name="searchDate">
+                                                                            </#if>
+                                                                            <#if searchPojo.searchFileName??>
+                                                                                <input type="hidden" value="${searchPojo.searchFileName}" name="searchFileName">
+                                                                            <#else >
+                                                                                <input type="hidden" value="" name="searchFileName">
+                                                                            </#if>
+
                                                                             <div class="col-xs-12">
                                                                                 <div class="example-box">
                                                                                     <label class="lyear-radio radio-inline radio-primary">

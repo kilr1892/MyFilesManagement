@@ -7,7 +7,6 @@ import cn.edu.zju.filesupload.service.FileInfoService;
 import cn.edu.zju.filesupload.utils.ResponseInfo;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,12 +30,6 @@ public class FileInfoController {
 
     @Autowired
     private FileInfoService fileInfoService;
-
-    @GetMapping("/upload")
-    public String uploadPage(Model model) {
-        // TODO 改成界面上的一个按钮, 这里会去了
-        return "upload";
-    }
 
     /**
      * 上传
@@ -79,5 +72,13 @@ public class FileInfoController {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+    @PostMapping("/toGrade")
+    public String toGrade(Model model, Search search,String fileId, String toGrade) throws BusinessException {
+
+        ResponseInfo<?> responseInfo = fileInfoService.toGrade(fileId, toGrade);
+
+        return "redirect:/download?searchDate=" + fileInfoService.getDateString(search.getSearchDate()) + "&searchFileName=" + search.getSearchFileName();
     }
 }

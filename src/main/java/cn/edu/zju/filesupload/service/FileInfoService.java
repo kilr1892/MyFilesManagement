@@ -26,4 +26,6 @@ public interface FileInfoService {
     String getDateString(Date searchDate);
 
     void downloadFile(String fileName, HttpServletResponse res) throws BusinessException, UnsupportedEncodingException;
+
+    ResponseInfo<?> toGrade(String fileId, String toGrade) throws BusinessException;
 }
