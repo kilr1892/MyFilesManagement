@@ -136,7 +136,7 @@ public class FileInfoServiceImpl implements FileInfoService {
         if ("".equals(searchPOJO.getSearchFileName()) || searchPOJO.getSearchFileName() == null) {
             ;
         } else {
-            criteria.andFileNameLike("%" + searchPOJO.getSearchFileName() + "%");
+            criteria.andFileOriginalNameLike("%" + searchPOJO.getSearchFileName() + "%");
         }
 
         fileInfoExample.setOrderByClause("file_id desc");
