@@ -20,11 +20,11 @@ spring:
 
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 server:
-  port: 8080
+  port: 16888
 
 mybatis:
   mapper-locations: classpath*:cn/edu/zju/filesupload/mapper/*.xml

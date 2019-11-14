@@ -123,8 +123,8 @@
                                                 <td>${data.fileOriginalName}</td>
                                                 <td>${data.fileCreatedDate?datetime}</td>
                                                 <td>${data.fileSize} kb</td>
-                                                <td>${data.fileCreatedByName}</td>
-                                                <td>${data.fileResourceId}</td>
+                                                <td>${data.fileCreatedByName} </td>
+                                                <td>${data.fileResourceId}<font size="2">(共有 ${data.fileReservedVarchar2} 人评分)</font></td>
                                                 <td>
                                                     <a href="download/${data.fileName}">下载</a>&nbsp;&nbsp;
 

@@ -39,15 +39,21 @@ public class FileInfoController {
      * @return ResponseInfo json对象
      */
     @PostMapping("/upload")
-    @ResponseBody
-    public ResponseInfo<?> upload(@RequestParam("file") MultipartFile[] files, FileInfo fileInfo) {
+//    @ResponseBody
+    public String upload(@RequestParam("file") MultipartFile[] files, FileInfo fileInfo) {
         if (StringUtils.isEmpty(fileInfo.getFileCreatedByName())) {
-            return ResponseInfo.error("请输入上传人姓名");
+            return "请输入上传人姓名";
         }
         if (files[0].isEmpty()) {
-            return ResponseInfo.error("请选择文件");
+            return "请选择文件";
         }
-        return fileInfoService.upload(files, fileInfo);
+        ResponseInfo<?> upload = fileInfoService.upload(files, fileInfo);
+        if (upload.getCode().equals("0000")) {
+            return "redirect:/download";
+        } else {
+            return "服务器错误";
+        }
+
     }
 
     @GetMapping(value = {"/", "/download"})
