@@ -58,7 +58,7 @@ public class FileInfoController {
 
     @GetMapping(value = {"/", "/download"})
     public String downloadPage(Model model, @RequestParam(defaultValue = "1") String pageNum, Search search) {
-        PageInfo<FileInfo> listFileDataPageInfo = fileInfoService.listFileData(Integer.parseInt(pageNum), 5, search);
+        PageInfo<FileInfo> listFileDataPageInfo = fileInfoService.listFileData(Integer.parseInt(pageNum), 10, search);
         if (search.getSearchDate() != null) {
             String date = fileInfoService.getDateString(search.getSearchDate());
             model.addAttribute("dateString", date);
